@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { QueryClient, QueryClientProvider, QueryErrorResetBoundary } from "react-query"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { ErrorBoundary } from "react-error-boundary"
+
+import { Home } from "home"
+import { ErrorContainer, NotFoundView } from "errors"
+
+import "./App.css"
 
 function App() {
+  const queryClient = new QueryClient()
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <QueryErrorResetBoundary>
+          {({ reset }) => (
+            <ErrorBoundary
+              FallbackComponent={ErrorContainer}
+              onReset={reset}
+              onError={(error) => {
+                console.log(error)
+              }}
+            >
+              <div className="flex h-screen w-full overflow-hidden bg-slate-50">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/rover/:roverName/sol/:solDay" element={<Home />} />
+                  <Route path="*" element={<NotFoundView />} />
+                </Routes>
+              </div>
+            </ErrorBoundary>
+          )}
+        </QueryErrorResetBoundary>
+      </QueryClientProvider>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App

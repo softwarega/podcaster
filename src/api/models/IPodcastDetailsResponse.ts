@@ -1,4 +1,4 @@
-export interface PodcastDetailsResponse {
+export interface IPodcastDetailsResponse {
   results: {
     kind: "podcast" | "podcast-episode"
     trackCount: number
