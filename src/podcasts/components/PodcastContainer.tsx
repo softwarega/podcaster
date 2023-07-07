@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faSortAlphaAsc, faSortAlphaDesc } from "@fortawesome/free-solid-svg-icons"
 
 import { usePodcasts } from "podcasts"
-import { Podcast } from "model"
+import { PodcastModel } from "model"
 
 import { PodcastList } from "./PodcastList"
 
@@ -19,8 +19,8 @@ const PodcastContainer: React.FC = () => {
 
   const filteredPodcasts = useMemo(() => {
     return podcasts
-      ?.reduce<Podcast[]>((prev, podcast) => {
-        if (podcast.getTitle().toLowerCase().includes(filter.toLowerCase())) {
+      ?.reduce<PodcastModel[]>((prev, podcast) => {
+        if (podcast.getLongTitle().toLowerCase().includes(filter.toLowerCase())) {
           return [...prev, podcast]
         }
 
@@ -28,17 +28,17 @@ const PodcastContainer: React.FC = () => {
       }, [])
       .sort((a, b) =>
         sort === SORT_ORDER.ASC
-          ? a.getTitle().localeCompare(b.getTitle(), "en", { sensitivity: "base" })
-          : b.getTitle().localeCompare(a.getTitle(), "en", { sensitivity: "base" }),
+          ? a.getLongTitle().localeCompare(b.getLongTitle(), "en", { sensitivity: "base" })
+          : b.getLongTitle().localeCompare(a.getLongTitle(), "en", { sensitivity: "base" }),
       )
   }, [podcasts, filter, sort])
 
   const sortIcon = useMemo(() => (sort === SORT_ORDER.ASC ? faSortAlphaAsc : faSortAlphaDesc), [sort])
 
   return (
-    <div className="p-5 overflow-y-scroll">
+    <div className="p-5 overflow-y-auto h-full">
       <div className="w-full flex justify-end mb-5">
-        <div className="relative flex  items-center w-full md:w-1/3">
+        <div className="relative flex items-center w-full md:w-1/3">
           <input
             value={filter}
             onChange={(e) => {

@@ -11,5 +11,5 @@ export interface IPodcastDetailsResponse {
     artworkUrl600: string
     description: string
     episodeUrl: string
-  }
+  }[]
 }

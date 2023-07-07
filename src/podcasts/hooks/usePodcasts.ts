@@ -2,7 +2,7 @@ import { useQuery } from "react-query"
 
 import { useClient, IPodcastsResponse } from "api"
 import { CustomError, displayNotificationError } from "errors"
-import { Podcast } from "model"
+import { PodcastModel } from "model"
 
 const usePodcasts = () => {
   const { search } = useClient()
@@ -28,7 +28,7 @@ const usePodcasts = () => {
     },
   )
 
-  return { podcasts: data as Podcast[], isLoading }
+  return { podcasts: data as PodcastModel[], isLoading }
 }
 
 const podcastsResponseToPodcast = (response: IPodcastsResponse) => {
@@ -36,18 +36,18 @@ const podcastsResponseToPodcast = (response: IPodcastsResponse) => {
     feed: { entry },
   } = response
 
-  return entry.reduce<Podcast[]>((prev, entry) => {
+  return entry.reduce<PodcastModel[]>((prev, entry) => {
     const image = entry["im:image"].find(({ attributes }) => attributes.height === "170")?.label ?? ""
 
     return [
       ...prev,
-      new Podcast(
+      new PodcastModel(
         entry.id.attributes["im:id"],
-        entry["im:name"].label,
+        entry["im:artist"].label,
         image,
+        entry["im:name"].label,
         entry.title.label,
         entry.category.attributes.label,
-        entry["im:releaseDate"].attributes.label,
       ),
     ]
   }, [])

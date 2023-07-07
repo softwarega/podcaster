@@ -1,14 +1,19 @@
 const apiUrl = process.env.REACT_APP_API_URL
+const apiAllOriginsUrl = process.env.REACT_APP_API_ALL_ORIGINS_URL
 
-const client = async (endpoint: string, { method, ...customConfig }: RequestInit) => {
+const client = async (endpoint: string, { method, ...customConfig }: RequestInit, useAllOrigin?: boolean) => {
   const config = {
     method,
     ...customConfig,
   }
 
-  const response = await fetch(`${apiUrl}/${endpoint}`, config)
+  const url = useAllOrigin
+    ? `${apiAllOriginsUrl}?url=${encodeURIComponent(`${apiUrl}/${endpoint}`)}`
+    : `${apiUrl}/${endpoint}`
 
-  const data = await response.json()
+  const response = await fetch(url, config)
+
+  const data = await response.json().then((data) => (useAllOrigin ? parseLookup(data.contents) : data))
 
   if (response.ok) {
     return data
@@ -28,22 +33,19 @@ const client = async (endpoint: string, { method, ...customConfig }: RequestInit
   }
 }
 
-const read = async <T>(endpoint: string, id: string, filters?: URLSearchParams, signal?: AbortSignal) => {
-  const data = await client(`${endpoint}/${id}${filters ? `?${filters}` : ""}`, {
-    method: "GET",
-    signal,
-  })
+const search = async <T>(endpoint: string, filters?: URLSearchParams, signal?: AbortSignal, useAllOrigin?: boolean) => {
+  const data = await client(
+    `${endpoint}${filters ? `?${filters}` : ""}`,
+    {
+      method: "GET",
+      signal,
+    },
+    useAllOrigin,
+  )
 
   return data as T
 }
 
-const search = async <T>(endpoint: string, filters?: URLSearchParams, signal?: AbortSignal) => {
-  const data = await client(`${endpoint}${filters ? `?${filters}` : ""}`, {
-    method: "GET",
-    signal,
-  })
+const parseLookup = (lookupResponse: string) => JSON.parse(lookupResponse)
 
-  return data as T
-}
-
-export { read, search }
+export { search }

@@ -4,6 +4,7 @@ import { ErrorBoundary } from "react-error-boundary"
 
 import { Home } from "home"
 import { ErrorContainer, NotFoundView } from "errors"
+import { PodcastContainer, PodcastDetailsContainer } from "podcasts"
 
 import "./App.css"
 
@@ -24,8 +25,10 @@ function App() {
             >
               <div className="flex h-screen w-full overflow-hidden bg-slate-50">
                 <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/rover/:roverName/sol/:solDay" element={<Home />} />
+                  <Route path="/" element={<Home />}>
+                    <Route index element={<PodcastContainer />} />
+                    <Route path="podcast/:id" element={<PodcastDetailsContainer />} />
+                  </Route>
                   <Route path="*" element={<NotFoundView />} />
                 </Routes>
               </div>

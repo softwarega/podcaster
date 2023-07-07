@@ -7,10 +7,10 @@ export interface IPodcastsResponse {
 export interface IPodcastEntryResponse {
   id: IPodcastEntryIdResponse
   "im:name": { label: string }
-  "im:image": IPodcastEntryImageResponse[]
+  "im:artist": { label: string }
   title: { label: string }
+  "im:image": IPodcastEntryImageResponse[]
   category: IPodcastEntryCategoryResponse
-  "im:releaseDate": IPodcastEntryReleaseDateResponse
 }
 
 export interface IPodcastEntryImageResponse {
@@ -20,10 +20,6 @@ export interface IPodcastEntryImageResponse {
 
 export interface IPodcastEntryIdResponse {
   attributes: { "im:id": string }
-}
-
-export interface IPodcastEntryReleaseDateResponse {
-  attributes: { label: string }
 }
 
 export interface IPodcastEntryCategoryResponse {
